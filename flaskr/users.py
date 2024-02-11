@@ -1,3 +1,5 @@
+import sys
+from getpass import getpass
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -10,6 +12,45 @@ from flaskr.auth import login_required
 from flaskr.db import get_db
 
 bp = Blueprint('users', __name__, url_prefix='/users')
+
+
+@bp.cli.command('create')
+@click.argument('username')
+def create(username):
+    db = get_db()
+    collection = db["users"]
+    user = collection.find_one({'username': username})
+    if user is not None:
+        print("User already exists")
+        sys.exit(1)
+    password = getpass()
+    data = {
+            "username": username,
+            "password": generate_password_hash(password),
+    }
+    collection.insert_one(data)
+    print(f"user \"{username}\" created")
+
+
+@bp.cli.command('reset')
+@click.argument('username')
+def reset(username):
+    db = get_db()
+    collection = db["users"]
+    user = collection.find_one({'username': username})
+    if user is None:
+        print("User does not exist")
+        sys.exit(1)
+    password = getpass()
+    query = {'username': username}
+    data = {
+        "$set": {
+            "username":username,
+            "password": generate_password_hash(password),
+        } 
+    }
+    collection.update_one(query, data)
+    print(f"user \"{username}\" password changed")
 
 
 @bp.route('/')
@@ -37,8 +78,8 @@ def create():
             flash(error)
         else:
             data = {
-                    "username":username,
-                    "password":  generate_password_hash(password),
+                    "username": username,
+                    "password": generate_password_hash(password),
             }
             db = get_db()
             collection = db["users"]

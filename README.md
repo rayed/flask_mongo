@@ -23,4 +23,10 @@
 
     http://localhost:5001/
 
-    
+
+## User command
+
+    # Create new user 
+    flask --app flaskr users create newuser
+    # Reset user password
+    flask --app flaskr users reset newuser
