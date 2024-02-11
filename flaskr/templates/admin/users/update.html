@@ -15,7 +15,7 @@
     <input name="password" id="password" type="password" class="form-control" required
       value="{{ request.form['password'] or user['password'] }}"  />
 
-    <input type="submit" value="Save">
+    <button type="submit" class="btn btn-primary">Save</button>
 
     </form>  
 {% endblock %}

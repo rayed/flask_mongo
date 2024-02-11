@@ -20,7 +20,7 @@ def fake_seed():
     for i in range(100):
         data = {
                 "title": fake.sentence(),
-                "body": "\n".join(fake.paragraphs()),
+                "body": "\n\n".join(fake.paragraphs()),
         }
         collection.insert_one(data)
     print("done")
