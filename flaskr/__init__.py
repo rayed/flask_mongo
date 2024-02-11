@@ -21,6 +21,10 @@ def create_app(test_config=None):
     app.register_blueprint(admin_blog.bp)
     app.register_blueprint(blog.bp)
 
+    @app.template_filter('nl2br')
+    def nl2br(s):
+        return "\n".join(["<p>"+line+"</p>" for line in s.split("\n") if line.strip() != ""])
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)

@@ -6,6 +6,6 @@
 
 {% block content %}
 
-{{ post.body }}
+{{ post.body|nl2br|safe }}<!-- DANGER: NOT SECURE -->
   
 {% endblock %}
