@@ -1,3 +1,4 @@
+import click
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -8,6 +9,23 @@ from flaskr.auth import login_required
 from flaskr.db import get_db
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
+
+
+@bp.cli.command('fake_seed')
+def fake_seed():
+    from faker import Faker
+    fake = Faker()
+    db = get_db()
+    collection = db["posts"]
+    for i in range(100):
+        data = {
+                "title": fake.sentence(),
+                "body": "\n".join(fake.paragraphs()),
+        }
+        collection.insert_one(data)
+    print("done")
+
+
 
 
 @bp.route('/')
