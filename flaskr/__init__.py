@@ -1,7 +1,7 @@
 import os
 
-from flask import Flask, render_template
-from .db import get_db
+from flask import Flask
+from . import common
 from . import auth
 from . import users
 from . import blog
@@ -14,6 +14,7 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
 
+    app.register_blueprint(common.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(users.bp)
     app.register_blueprint(blog.bp)
@@ -30,10 +31,5 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    @app.route('/')
-    def index():
-        return render_template('index.html')
-
 
     return app
