@@ -1,6 +1,10 @@
 import os
-
+import re
 from flask import Flask
+import re
+from jinja2 import pass_eval_context
+from markupsafe import Markup, escape
+
 from . import common
 from . import auth
 from . import admin_users
@@ -21,10 +25,20 @@ def create_app(test_config=None):
     app.register_blueprint(admin_blog.bp)
     app.register_blueprint(blog.bp)
 
+    # Source: https://jinja.palletsprojects.com/en/3.1.x/api/#custom-filters
     @app.template_filter('nl2br')
-    def nl2br(s):
-        return "\n".join(["<p>"+line+"</p>" for line in s.split("\n") if line.strip() != ""])
-
+    @pass_eval_context
+    def nl2br(eval_ctx, value):
+        br = "<br>\n"
+        if eval_ctx.autoescape:
+            value = escape(value)
+            br = Markup(br)
+        result = "\n\n".join(
+            f"<p>{br.join(p.splitlines())}</p>"
+            for p in re.split(r"(?:\r\n|\r(?!\n)|\n){2,}", value)
+        )
+        return Markup(result) if eval_ctx.autoescape else result
+    
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
