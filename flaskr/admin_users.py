@@ -11,7 +11,7 @@ from bson.objectid import ObjectId
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
-bp = Blueprint('users', __name__, url_prefix='/users')
+bp = Blueprint('admin_users', __name__, url_prefix='/admin/users')
 
 
 @bp.cli.command('create')
@@ -58,7 +58,7 @@ def index():
     db = get_db()
     collection = db["users"]
     users = collection.find()
-    return render_template('users/index.html', users=users)
+    return render_template('admin/users/index.html', users=users)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -84,9 +84,9 @@ def create():
             db = get_db()
             collection = db["users"]
             collection.insert_one(data)
-            return redirect(url_for('users.index'))
+            return redirect(url_for('admin_users.index'))
 
-    return render_template('users/create.html')
+    return render_template('admin/users/create.html')
 
 
 @bp.route('/<id>/update', methods=('GET', 'POST'))
@@ -117,9 +117,9 @@ def update(id):
                 } 
             }
             collection.update_one(query, data)
-            return redirect(url_for('users.index'))
+            return redirect(url_for('admin_users.index'))
 
-    return render_template('users/update.html', user=user)
+    return render_template('admin/users/update.html', user=user)
 
 
 @bp.route('/<id>/delete', methods=('POST',))
@@ -128,4 +128,4 @@ def delete(id):
     db = get_db()
     collection = db["users"]
     collection.delete_one({'_id': ObjectId(id)})
-    return redirect(url_for('users.index'))
+    return redirect(url_for('admin_users.index'))

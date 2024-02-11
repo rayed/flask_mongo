@@ -27,6 +27,8 @@
 ## User command
 
     # Create new user 
-    flask --app flaskr users create newuser
+    flask --app flaskr admin_users create newuser
     # Reset user password
-    flask --app flaskr users reset newuser
+    flask --app flaskr admin_users reset currentuser
+    # Fake blog data
+    flask --app flaskr admin_blog fake_seed

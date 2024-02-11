@@ -3,8 +3,9 @@ import os
 from flask import Flask
 from . import common
 from . import auth
-from . import users
+from . import admin_users
 from . import blog
+from . import admin_blog
     
 def create_app(test_config=None):
     # create and configure the app
@@ -16,7 +17,8 @@ def create_app(test_config=None):
 
     app.register_blueprint(common.bp)
     app.register_blueprint(auth.bp)
-    app.register_blueprint(users.bp)
+    app.register_blueprint(admin_users.bp)
+    app.register_blueprint(admin_blog.bp)
     app.register_blueprint(blog.bp)
 
     if test_config is None:

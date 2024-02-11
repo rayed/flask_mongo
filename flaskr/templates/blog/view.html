@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Home{% endblock %}</h1>
+  <h1>{% block title %}{{ post.title }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
 
-<h3>Welcome to Flaskr</h3>
-
+{{ post.body }}
+  
 {% endblock %}
